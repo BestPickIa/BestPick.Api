@@ -11,9 +11,9 @@ public class HistoricoBuscaConfiguracoes : IEntityTypeConfiguration<HistoricoBus
         builder.ToTable("HistoricoBusca").HasKey(x => x.Id);
 
         builder.Property(nameof(HistoricoBusca.Id)).HasColumnName("HistoricoBuscaId");
-        builder.Property(nameof(HistoricoBusca.MotivoCompra)).HasColumnName("MotivoCompra");
+        builder.Property(nameof(HistoricoBusca.MotivoCompra)).HasColumnName("MotivoCompra").HasMaxLength(500);
         builder.Property(nameof(HistoricoBusca.UsuarioId)).HasColumnName("UsuarioId");
-        builder.Property(nameof(HistoricoBusca.ProdutoNome)).HasColumnName("ProdutoNome");
+        builder.Property(nameof(HistoricoBusca.ProdutoNome)).HasColumnName("ProdutoNome").HasMaxLength(200);
         builder.Property(nameof(HistoricoBusca.ValorCompra)).HasColumnName("ValorCompra").HasColumnType("decimal(18,2)");
         builder.Property(nameof(HistoricoBusca.Ativo)).HasColumnName("Ativo");
         builder.Property(nameof(HistoricoBusca.DataBusca)).HasColumnName("DataBusca");

@@ -11,7 +11,7 @@ public class FavoritoConfiguracoes : IEntityTypeConfiguration<Favorito>
         builder.ToTable("Favorito").HasKey(x => x.Id);
 
         builder.Property(nameof(Favorito.Id)).HasColumnName("FavoritoId");
-        builder.Property(nameof(Favorito.Status)).HasColumnName("Status");
+        builder.Property(nameof(Favorito.Status)).HasColumnName("Status").HasMaxLength(20);
         builder.Property(nameof(Favorito.UsuarioId)).HasColumnName("UsuarioId");
         builder.Property(nameof(Favorito.ProdutoId)).HasColumnName("ProdutoId");
 
