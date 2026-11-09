@@ -7,7 +7,9 @@ public interface IUsuarioRepositorio
     Task<Usuario> AdicionarAsync(Usuario usuario);
     Task<IEnumerable<Usuario>> ListarTodosAsync();
     Task RemoverAsync(int id);
+    Task DeletarPermanentementeAsync(int id);
     Task<Usuario> ObterPorIdAsync(int id);
     Task AtualizarAsync(Usuario usuario);
+    Task<bool> AtualizarSenhaAsync(Usuario usuario, string novoHash);
     Task<Usuario> ObterPorEmailAsync(string email);
 }

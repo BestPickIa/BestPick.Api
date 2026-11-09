@@ -1,4 +1,5 @@
 using BestPick.Aplicacao.Interfaces;
+using BestPick.Api.Attributes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -16,6 +17,7 @@ public class DashboardController : ControllerBase
     {
         _dashboardAplicacao = dashboardAplicacao;
     }
+
 
     [HttpGet]
     public async Task<ActionResult> Obter()

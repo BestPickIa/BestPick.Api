@@ -37,10 +37,52 @@ public class UsuarioRepositorio : IUsuarioRepositorio
         obtido.Ativo = false;
         await contexto.SaveChangesAsync();
     }
+
+    public async Task DeletarPermanentementeAsync(int id)
+    {
+        var usuario = await contexto.Usuarios.FindAsync(id);
+        if (usuario == null)
+            throw new Exception("Usuário não encontrado.");
+
+        contexto.Usuarios.Remove(usuario);
+        await contexto.SaveChangesAsync();
+    }
     public async Task AtualizarAsync(Usuario usuario)
     {
         contexto.Usuarios.Update(usuario);
         await contexto.SaveChangesAsync();
+    }
+
+    public async Task<bool> AtualizarSenhaAsync(Usuario usuario, string novoHash)
+    {
+        var entrada = contexto.Entry(usuario);
+        if (entrada.State == EntityState.Detached)
+            contexto.Usuarios.Attach(usuario);
+
+        var senha = entrada.Property(x => x.Senha);
+        var hashAnterior = senha.CurrentValue;
+        senha.CurrentValue = novoHash;
+        senha.IsModified = true;
+
+        try
+        {
+            // Senha e Ativo originais participam do WHERE: uma troca concorrente
+            // ou desativação impede que este hash sobrescreva o estado mais recente.
+            await contexto.SaveChangesAsync();
+            return true;
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            senha.CurrentValue = hashAnterior;
+            senha.IsModified = false;
+            return false;
+        }
+        catch
+        {
+            senha.CurrentValue = hashAnterior;
+            senha.IsModified = false;
+            throw;
+        }
     }
     public async Task<Usuario> ObterPorEmailAsync(string email)
     {

@@ -1,5 +1,6 @@
 using BestPick.Aplicacao.Interfaces;
 using BestPick.Aplicacao.Models;
+using BestPick.Api.Attributes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -18,6 +19,7 @@ public class FavoritoController : ControllerBase
         _favoritoAplicacao = favoritoAplicacao;
     }
 
+
     [HttpPost]
     public async Task<IActionResult> AdicionarAsync([FromBody] FavoritoCriar favorito)
     {
@@ -34,6 +36,7 @@ public class FavoritoController : ControllerBase
             return BadRequest(ex.Message);
         }
     }
+
 
     [HttpGet("{id}")]
     public async Task<IActionResult> ObterPorIdAsync([FromRoute] int id)
@@ -52,6 +55,7 @@ public class FavoritoController : ControllerBase
         }
     }
 
+
     [HttpGet]
     public async Task<IActionResult> ListarPorUsuarioAsync()
     {
@@ -69,6 +73,7 @@ public class FavoritoController : ControllerBase
         }
     }
 
+
     [HttpPut]
     public async Task<IActionResult> AtualizarStatusAsync([FromBody] FavoritoAtualizar favorito)
     {
@@ -85,6 +90,7 @@ public class FavoritoController : ControllerBase
             return BadRequest(ex.Message);
         }
     }
+
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> RemoverAsync([FromRoute] int id)

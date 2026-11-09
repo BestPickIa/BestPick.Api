@@ -8,11 +8,21 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using BestPick.Servicos;
 using BestPick.Aplicacao;
+using BestPick.Dominio.Entidades;
+using Microsoft.AspNetCore.Identity;
+using BestPick.Servicos.Fotos;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddScoped<IUsuarioAplicacao, UsuarioAplicacao>();
+builder.Services.AddScoped<IPasswordHasher<Usuario>, PasswordHasher<Usuario>>();
+builder.Services.AddScoped<IFotoUsuarioAplicacao, FotoUsuarioAplicacao>();
+builder.Services.AddScoped<IFotoUsuarioRepositorio, FotoUsuarioRepositorio>();
+builder.Services.AddSingleton<IProcessadorFoto, ProcessadorFotoSkia>();
+builder.Services.AddSingleton<IArmazenamentoFotos>(new ArmazenamentoFotosLocal(
+    builder.Configuration["Fotos:Diretorio"] ?? Path.Combine(builder.Environment.ContentRootPath, "App_Data", "Fotos"),
+    builder.Environment.WebRootPath ?? Path.Combine(builder.Environment.ContentRootPath, "wwwroot")));
 builder.Services.AddScoped<IFavoritoAplicacao, FavoritoAplicacao>();
 builder.Services.AddScoped<IHistoricoAplicacao, HistoricoAplicacao>();
 builder.Services.AddScoped<IProdutoAplicacao, ProdutoAplicacao>();

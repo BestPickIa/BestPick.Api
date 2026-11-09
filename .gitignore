@@ -55,3 +55,6 @@ CodeCoverage/
 *.VisualState.xml
 TestResult.xml
 nunit-*.xml
+
+# Fotos privadas de perfil (dados de runtime, nunca versionar)
+/BestPick.Api/App_Data/Fotos/

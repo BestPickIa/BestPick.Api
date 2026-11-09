@@ -3,6 +3,9 @@ using BestPick.Aplicacao.Interfaces;
 using BestPick.Aplicacao.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
+using BestPick.Aplicacao.Excecoes;
+using BestPick.Api.Attributes;
 
 namespace BestPick.Api.Controllers;
 
@@ -26,9 +29,13 @@ public class UsuarioController : ControllerBase
 
             return Ok(resultado);
         }
-        catch (Exception ex)
+        catch (ValidationException ex)
         {
             return BadRequest(ex.Message);
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, "Não foi possível cadastrar o usuário. Tente novamente.");
         }
     }
 
@@ -41,13 +48,54 @@ public class UsuarioController : ControllerBase
 
             return Ok(resultado);
         }
-        catch (Exception ex)
+        catch (UnauthorizedAccessException)
         {
-            return BadRequest(ex.Message);
+            return BadRequest("Email ou senha inválidos.");
+        }
+        catch (ConflitoSenhaException ex)
+        {
+            return Conflict(ex.Message);
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, "Não foi possível realizar o login. Tente novamente.");
         }
     }
 
     [Authorize]
+
+    [HttpPut("senha")]
+    public async Task<IActionResult> AlterarSenhaAsync([FromBody] AlterarSenhaRequest request)
+    {
+        if (!int.TryParse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, out var usuarioId) || usuarioId <= 0)
+            return Unauthorized();
+
+        try
+        {
+            await _usuarioAplicacao.AlterarSenhaAsync(usuarioId, request);
+            return Ok(new { mensagem = "Senha alterada com sucesso." });
+        }
+        catch (ValidationException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            // Senha atual incorreta deve ser HTTP 400 (BadRequest), não 401
+            return BadRequest(ex.Message);
+        }
+        catch (ConflitoSenhaException ex)
+        {
+            return Conflict(ex.Message);
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, "Não foi possível alterar a senha. Tente novamente.");
+        }
+    }
+
+    [Authorize]
+
     [HttpGet]
     public async Task<IActionResult> ObterAsync()
     {
@@ -68,6 +116,7 @@ public class UsuarioController : ControllerBase
     }
 
     [Authorize]
+
     [HttpPut]
     public async Task<IActionResult> AtualizarAsync(
         [FromBody] UsuarioAtualizar usuario)
@@ -89,6 +138,8 @@ public class UsuarioController : ControllerBase
     }
 
     [Authorize]
+    [Authorize]
+
     [HttpDelete]
     public async Task<IActionResult> RemoverAsync()
     {
@@ -105,6 +156,41 @@ public class UsuarioController : ControllerBase
         catch (Exception ex)
         {
             return BadRequest(ex.Message);
+        }
+    }
+
+    [Authorize]
+
+    [HttpDelete("permanente")]
+    public async Task<IActionResult> DeletarPermanentementeAsync([FromBody] ConfirmarExclusaoRequest request)
+    {
+        if (!int.TryParse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, out var usuarioId) || usuarioId <= 0)
+            return Unauthorized();
+
+        try
+        {
+            if (request == null)
+                throw new ValidationException("Informe os dados para confirmar a exclusão.");
+
+            System.ComponentModel.DataAnnotations.Validator.ValidateObject(request, 
+                new System.ComponentModel.DataAnnotations.ValidationContext(request), 
+                validateAllProperties: true);
+
+            await _usuarioAplicacao.DeletarPermanentementeAsync(usuarioId, request.Senha);
+
+            return Ok(new { mensagem = "Conta excluída permanentemente." });
+        }
+        catch (ValidationException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, "Não foi possível excluir a conta. Tente novamente.");
         }
     }
 }

@@ -38,6 +38,7 @@ namespace BestPick.Repositorio.Migrations
                         .HasColumnName("ProdutoId");
 
                     b.Property<int>("Status")
+                        .HasMaxLength(20)
                         .HasColumnType("int")
                         .HasColumnName("Status");
 
@@ -72,11 +73,13 @@ namespace BestPick.Repositorio.Migrations
                         .HasColumnName("DataBusca");
 
                     b.Property<string>("MotivoCompra")
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)")
                         .HasColumnName("MotivoCompra");
 
                     b.Property<string>("ProdutoNome")
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)")
                         .HasColumnName("ProdutoNome");
 
                     b.Property<int>("UsuarioId")
@@ -104,11 +107,13 @@ namespace BestPick.Repositorio.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Beneficios")
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(4000)
+                        .HasColumnType("nvarchar(4000)")
                         .HasColumnName("Beneficios");
 
                     b.Property<string>("Categoria")
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
                         .HasColumnName("Categoria");
 
                     b.Property<int>("HistoricoBuscaId")
@@ -116,11 +121,13 @@ namespace BestPick.Repositorio.Migrations
                         .HasColumnName("HistoricoBuscaId");
 
                     b.Property<string>("ImgUrl")
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(2048)
+                        .HasColumnType("nvarchar(2048)")
                         .HasColumnName("ImgUrl");
 
                     b.Property<string>("Nome")
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)")
                         .HasColumnName("Nome");
 
                     b.Property<decimal>("Preco")
@@ -128,7 +135,8 @@ namespace BestPick.Repositorio.Migrations
                         .HasColumnName("Preco");
 
                     b.Property<string>("Url")
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(2048)
+                        .HasColumnType("nvarchar(2048)")
                         .HasColumnName("Url");
 
                     b.HasKey("Id");
@@ -148,19 +156,32 @@ namespace BestPick.Repositorio.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<bool>("Ativo")
+                        .IsConcurrencyToken()
                         .HasColumnType("bit")
                         .HasColumnName("Ativo");
 
                     b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(254)
+                        .HasColumnType("nvarchar(254)")
                         .HasColumnName("Email");
 
+                    b.Property<DateTime?>("FotoAtualizadaEm")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FotoNomeArquivo")
+                        .IsConcurrencyToken()
+                        .HasMaxLength(36)
+                        .HasColumnType("nvarchar(36)");
+
                     b.Property<string>("Nome")
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)")
                         .HasColumnName("Nome");
 
                     b.Property<string>("Senha")
-                        .HasColumnType("nvarchar(max)")
+                        .IsConcurrencyToken()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)")
                         .HasColumnName("Senha");
 
                     b.HasKey("Id");

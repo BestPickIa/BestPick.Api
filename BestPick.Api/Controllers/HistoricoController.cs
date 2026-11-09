@@ -1,5 +1,6 @@
 using BestPick.Aplicacao.Interfaces;
 using BestPick.Aplicacao.Models;
+using BestPick.Api.Attributes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -18,6 +19,7 @@ public class HistoricoController : ControllerBase
         _historicoAplicacao = historicoAplicacao;
     }
 
+
     [HttpPost]
     public async Task<IActionResult> AdicionarAsync([FromBody] HistoricoCriar historicoBusca)
     {
@@ -34,6 +36,7 @@ public class HistoricoController : ControllerBase
             return BadRequest(ex.Message);
         }
     }
+
 
     [HttpGet("{id}")]
     public async Task<IActionResult> ObterPorIdAsync([FromRoute] int id)
@@ -52,6 +55,7 @@ public class HistoricoController : ControllerBase
         }
     }
 
+
     [HttpGet]
     public async Task<IActionResult> ListarPorUsuarioAsync()
     {
@@ -68,6 +72,7 @@ public class HistoricoController : ControllerBase
             return BadRequest(ex.Message);
         }
     }
+
 
     [HttpDelete("{historicoId}")]
     public async Task<IActionResult> RemoverAsync([FromRoute] int historicoId)

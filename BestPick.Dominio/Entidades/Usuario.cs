@@ -7,6 +7,8 @@ public class Usuario
     public string Email { get; set; }
     public string Senha { get; set; }
     public bool Ativo { get; set; }
+    public string FotoNomeArquivo { get; set; }
+    public DateTime? FotoAtualizadaEm { get; set; }
       public Usuario()
     {
         Ativo = true;
