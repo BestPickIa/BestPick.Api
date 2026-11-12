@@ -101,7 +101,16 @@ builder.Services.AddCors(options =>
     options.AddPolicy("LiberarFrontend", policy =>
     {
         policy
-            .WithOrigins("http://localhost:3000")
+            .WithOrigins(
+                "http://localhost:3000",
+                "http://localhost:3001",
+                "http://localhost:5173",
+                "http://localhost:5174",
+                "http://127.0.0.1:3000",
+                "http://127.0.0.1:3001",
+                "http://127.0.0.1:5173",
+                "http://127.0.0.1:5174"
+            )
             .AllowAnyHeader()
             .AllowAnyMethod();
     });
@@ -116,7 +125,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// Somente usar HTTPS redirect em produção
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
 
 app.UseCors("LiberarFrontend");
 app.UseAuthentication();
